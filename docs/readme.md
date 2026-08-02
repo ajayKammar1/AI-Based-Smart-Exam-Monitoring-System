@@ -349,3 +349,9 @@ Tests the head pose detection system. It calculates the pitch, yaw, and roll of 
 ```bash
 python -m ai.head_pose.test_head_pose
 ```
+
+### 7. Test Pose Detection
+Tests the pose detection system using MediaPipe. It identifies body landmarks such as shoulders and wrists.
+```bash
+python -m ai.pose_detection.test_pose_detection
+```

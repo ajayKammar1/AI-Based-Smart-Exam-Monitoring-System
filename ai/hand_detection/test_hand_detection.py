@@ -14,9 +14,9 @@ while True:
     if frame is None:
         break
 
-    data = detector.detect(frame)
+    results = detector.detect(frame)
 
-    frame = draw_hands(frame, data)
+    draw_hands(frame, results)
 
     cv2.imshow("Hand Detection", frame)
 

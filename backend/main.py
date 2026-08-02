@@ -4,6 +4,9 @@ from backend.database.mongodb import connect_db
 from backend.database.mongodb import close_db
 from backend.api.auth import router as auth_router
 from backend.api.students import router as student_router
+from backend.api.exam_halls import router as hall_router
+from backend.api.exams import router as exam_router
+from backend.api.assignments import router as assignment_router
 
 app = FastAPI(
     title="AI-Based Offline Exam Malpractice Detection System",
@@ -24,6 +27,9 @@ def shutdown():
 
 app.include_router(auth_router)
 app.include_router(student_router)
+app.include_router(hall_router)
+app.include_router(exam_router)
+app.include_router(assignment_router)
 
 @app.get("/")
 def home():

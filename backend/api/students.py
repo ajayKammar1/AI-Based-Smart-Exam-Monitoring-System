@@ -9,6 +9,7 @@ from backend.services.student_service import StudentService
 from fastapi import UploadFile, File
 
 from backend.services.upload_service import UploadService
+from backend.services.embedding_service import EmbeddingService
 
 router = APIRouter(
     prefix="/students",
@@ -90,3 +91,23 @@ def upload_photo(
         "success": True,
         "photo_path": path
     }
+
+@router.post("/{student_id}/embedding")
+def generate_embedding(
+    student_id:str
+):
+
+    result = EmbeddingService.generate(
+        student_id
+    )
+
+
+    if result["success"]:
+
+        StudentService.update_embedding(
+            student_id,
+            result["embedding_path"]
+        )
+
+
+    return result

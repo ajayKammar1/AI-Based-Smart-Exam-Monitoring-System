@@ -75,3 +75,20 @@ class StudentService:
                 }
             }
         )
+
+    @staticmethod
+    def update_embedding(
+        student_id,
+        embedding_path
+    ):
+
+        students.update_one(
+        {
+            "student_id":student_id
+        },
+        {
+            "$set":{
+                "embedding_path":embedding_path
+            }
+        }
+    )

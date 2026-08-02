@@ -337,3 +337,9 @@ Tests the live face recognition system against registered faces. Unrecognized fa
 ```bash
 python -m ai.face_recognition.test_recognition
 ```
+
+### 5. Test Tracking
+Tests the face tracking system, which assigns persistent IDs to detected faces.
+```bash
+python -m ai.tracking.test_tracker
+```

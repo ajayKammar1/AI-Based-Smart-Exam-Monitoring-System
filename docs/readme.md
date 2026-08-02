@@ -355,3 +355,23 @@ Tests the pose detection system using MediaPipe. It identifies body landmarks su
 ```bash
 python -m ai.pose_detection.test_pose_detection
 ```
+
+---
+
+# 9. Running the Backend
+
+The backend is built with FastAPI and MongoDB. It provides REST APIs for authentication, student management, and will serve as the bridge to the AI engine.
+
+1.  **Configure Environment**:
+    Ensure MongoDB is running locally (or update `backend/.env` with your cluster URL).
+
+2.  **Start the API Server**:
+    Run the following command from the project root:
+    ```bash
+    python -m uvicorn backend.main:app --reload
+    ```
+
+3.  **Access Documentation**:
+    Once running, open your browser and navigate to:
+    *   **Swagger UI:** [http://localhost:8000/docs](http://localhost:8000/docs)
+    *   **ReDoc:** [http://localhost:8000/redoc](http://localhost:8000/redoc)

@@ -1,0 +1,2 @@
+MODEL_NAME = "buffalo_l"
+DETECTION_SIZE = (640, 640)

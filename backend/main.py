@@ -8,6 +8,9 @@ from backend.api.exam_halls import router as hall_router
 from backend.api.exams import router as exam_router
 from backend.api.assignments import router as assignment_router
 
+from backend.api.monitoring import router as monitoring_router
+from backend.api.websocket_api import router as websocket_router
+
 app = FastAPI(
     title="AI-Based Offline Exam Malpractice Detection System",
     version="1.0.0"
@@ -30,6 +33,8 @@ app.include_router(student_router)
 app.include_router(hall_router)
 app.include_router(exam_router)
 app.include_router(assignment_router)
+app.include_router(monitoring_router)
+app.include_router(websocket_router)
 
 @app.get("/")
 def home():

@@ -1,4 +1,4 @@
-
+#AI
 numpy>=2.2.0
 opencv-python>=4.12.0
 
@@ -6,3 +6,20 @@ insightface
 onnxruntime
 deep-sort-realtime
 mediapipe
+
+# Backend
+fastapi
+uvicorn[standard]
+pymongo
+python-dotenv
+python-multipart
+passlib[bcrypt]
+bcrypt
+aiofiles
+
+# Reports
+reportlab
+openpyxl
+
+# Utilities
+pillow

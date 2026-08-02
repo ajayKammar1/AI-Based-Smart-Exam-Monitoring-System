@@ -307,3 +307,33 @@ Week 6
 - Multi-User Support
 - Cloud Deployment
 - Attendance Management
+
+---
+
+# 8. Running AI Module Tests
+
+To test individual components of the AI system during development, you can run their respective test scripts. Run these commands from the root directory of the project:
+
+### 1. Test Camera
+Tests if the camera feed is working correctly.
+```bash
+python -m ai.camera.test_camera
+```
+
+### 2. Test Face Detection
+Tests the InsightFace face detection model. Draws bounding boxes and confidence scores around detected faces.
+```bash
+python -m ai.face_detection.test_detector
+```
+
+### 3. Test Face Registration
+Allows you to register a face to the system. You will be prompted to enter a student's name, and then you can press 'S' to save their face embedding.
+```bash
+python -m ai.face_registration.test_register
+```
+
+### 4. Test Face Recognition
+Tests the live face recognition system against registered faces. Unrecognized faces are marked as "Unknown" and saved to `storage/unknown_faces`.
+```bash
+python -m ai.face_recognition.test_recognition
+```

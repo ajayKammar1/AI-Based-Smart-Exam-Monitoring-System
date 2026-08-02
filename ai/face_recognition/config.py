@@ -1,0 +1,3 @@
+KNOWN_FACE_DIR = "storage/known_faces"
+
+SIMILARITY_THRESHOLD = 0.55

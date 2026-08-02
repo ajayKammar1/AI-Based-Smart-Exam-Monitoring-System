@@ -343,3 +343,9 @@ Tests the face tracking system, which assigns persistent IDs to detected faces.
 ```bash
 python -m ai.tracking.test_tracker
 ```
+
+### 6. Test Head Pose
+Tests the head pose detection system. It calculates the pitch, yaw, and roll of the detected face, and determines the head's facing direction (Straight, Left, Right, Up, or Down).
+```bash
+python -m ai.head_pose.test_head_pose
+```

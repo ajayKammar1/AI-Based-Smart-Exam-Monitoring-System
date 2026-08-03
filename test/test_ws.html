@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+
+<h2>WebSocket Test</h2>
+
+<button onclick="connect()">Connect</button>
+<button onclick="send()">Send Message</button>
+
+<pre id="log"></pre>
+
+<script>
+
+let socket;
+
+function log(message){
+    document.getElementById("log").textContent += message + "\n";
+}
+
+function connect(){
+
+    socket = new WebSocket("ws://127.0.0.1:8000/ws/monitor");
+
+    socket.onopen = function(){
+        log("✅ Connected");
+    };
+
+    socket.onmessage = function(event){
+        log("Received:");
+        log(event.data);
+    };
+
+    socket.onclose = function(){
+        log("Disconnected");
+    };
+
+}
+
+function send(){
+
+    socket.send(JSON.stringify({
+
+        exam_id:"EX001",
+
+        student_id:"ST001",
+
+        tracking_id:1,
+
+        event_type:"HAND_NEAR_FACE",
+
+        confidence:0.95
+
+    }));
+
+}
+
+</script>
+
+</body>
+</html>

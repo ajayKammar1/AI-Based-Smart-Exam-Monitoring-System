@@ -7,6 +7,7 @@ from backend.api.students import router as student_router
 from backend.api.exam_halls import router as hall_router
 from backend.api.exams import router as exam_router
 from backend.api.assignments import router as assignment_router
+from backend.api.attendance import router as attendance_router
 
 from backend.api.monitoring import router as monitoring_router
 from backend.api.websocket_api import router as websocket_router
@@ -33,6 +34,7 @@ app.include_router(student_router)
 app.include_router(hall_router)
 app.include_router(exam_router)
 app.include_router(assignment_router)
+app.include_router(attendance_router)
 app.include_router(monitoring_router)
 app.include_router(websocket_router)
 

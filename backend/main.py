@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.database.mongodb import connect_db
 from backend.database.mongodb import close_db
@@ -15,6 +16,14 @@ from backend.api.websocket_api import router as websocket_router
 app = FastAPI(
     title="AI-Based Offline Exam Malpractice Detection System",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

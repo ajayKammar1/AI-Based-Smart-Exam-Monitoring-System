@@ -12,8 +12,8 @@ def connect_db():
         client = MongoClient(MONGO_URI)
         db = client[DATABASE_NAME]
 
-        print("✅ MongoDB Connected")
-        print(f"📂 Database : {DATABASE_NAME}")
+        print("SUCCESS: MongoDB Connected")
+        print(f"Database : {DATABASE_NAME}")
 
     return db
 
@@ -30,4 +30,4 @@ def close_db():
 
     if client:
         client.close()
-        print("❌ MongoDB Connection Closed")
+        print("CLOSED: MongoDB Connection Closed")

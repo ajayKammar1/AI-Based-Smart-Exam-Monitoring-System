@@ -57,11 +57,14 @@ class SuspicionEngine:
             tracking_id
         )
 
+        event_added = False
+
         if event == "HAND_NEAR_FACE":
 
             if self._can_add(student, event):
 
                 student["score"] += HAND_NEAR_FACE_SCORE
+                event_added = True
 
         elif event in [
 
@@ -78,32 +81,36 @@ class SuspicionEngine:
             if self._can_add(student, "HEAD"):
 
                 student["score"] += HEAD_TURN_SCORE
+                event_added = True
 
         elif event == "UNKNOWN_FACE":
 
             if self._can_add(student, event):
 
                 student["score"] += UNKNOWN_FACE_SCORE
+                event_added = True
 
         elif event == "HANDS_MISSING":
 
             if self._can_add(student, event):
 
                 student["score"] += HANDS_MISSING_SCORE
+                event_added = True
 
         if student["score"] > MAX_SUSPICION_SCORE:
 
             student["score"] = MAX_SUSPICION_SCORE
 
-        student["events"].append({
+        if event_added:
+            student["events"].append({
 
-            "event": event,
+                "event": event,
 
-            "time": time.strftime("%H:%M:%S")
+                "time": time.strftime("%H:%M:%S")
 
-        })
+            })
 
-        return student["score"]
+        return student["score"], event_added
 
     def get_score(
         self,

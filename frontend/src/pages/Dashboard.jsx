@@ -1,7 +1,34 @@
-import React from 'react';
-import { ShieldAlert, Users, Video, Activity } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShieldAlert, Users, Video, FileText, LayoutDashboard } from 'lucide-react';
+import { getStudents, getExams, getHalls } from '../api';
 
 const Dashboard = () => {
+  const [stats, setStats] = useState({
+    totalStudents: 0,
+    totalExams: 0,
+    totalHalls: 0,
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const [students, exams, halls] = await Promise.all([
+          getStudents(),
+          getExams(),
+          getHalls()
+        ]);
+        setStats({
+          totalStudents: students.length || 0,
+          totalExams: exams.length || 0,
+          totalHalls: halls.length || 0,
+        });
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats", err);
+      }
+    };
+    fetchStats();
+  }, []);
+
   return (
     <div className="animate-fade-in">
       <header style={{ marginBottom: '2rem' }}>
@@ -18,20 +45,32 @@ const Dashboard = () => {
               <Users size={24} className="text-primary" style={{ color: 'var(--accent-primary)' }}/>
             </div>
             <div>
-              <p className="text-muted" style={{ fontSize: '0.85rem', fontWeight: 600 }}>Active Students</p>
-              <h3 style={{ fontSize: '1.5rem' }}>42 / 50</h3>
+              <p className="text-muted" style={{ fontSize: '0.85rem', fontWeight: 600 }}>Total Students</p>
+              <h3 style={{ fontSize: '1.5rem' }}>{stats.totalStudents}</h3>
             </div>
           </div>
         </div>
 
         <div className="glass-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-            <div style={{ padding: '0.75rem', background: 'rgba(239, 68, 68, 0.1)', borderRadius: 'var(--radius-md)' }}>
-              <ShieldAlert size={24} className="text-danger" />
+            <div style={{ padding: '0.75rem', background: 'rgba(245, 158, 11, 0.1)', borderRadius: 'var(--radius-md)' }}>
+              <FileText size={24} className="text-warning" />
             </div>
             <div>
-              <p className="text-muted" style={{ fontSize: '0.85rem', fontWeight: 600 }}>Active Flags</p>
-              <h3 style={{ fontSize: '1.5rem' }}>3</h3>
+              <p className="text-muted" style={{ fontSize: '0.85rem', fontWeight: 600 }}>Total Exams</p>
+              <h3 style={{ fontSize: '1.5rem' }}>{stats.totalExams}</h3>
+            </div>
+          </div>
+        </div>
+
+        <div className="glass-card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ padding: '0.75rem', background: 'rgba(139, 92, 246, 0.1)', borderRadius: 'var(--radius-md)' }}>
+              <LayoutDashboard size={24} style={{ color: 'var(--accent-secondary)' }} />
+            </div>
+            <div>
+              <p className="text-muted" style={{ fontSize: '0.85rem', fontWeight: 600 }}>Total Halls</p>
+              <h3 style={{ fontSize: '1.5rem' }}>{stats.totalHalls}</h3>
             </div>
           </div>
         </div>
@@ -44,18 +83,6 @@ const Dashboard = () => {
             <div>
               <p className="text-muted" style={{ fontSize: '0.85rem', fontWeight: 600 }}>Camera Status</p>
               <h3 style={{ fontSize: '1.5rem' }}>Online</h3>
-            </div>
-          </div>
-        </div>
-
-        <div className="glass-card">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-            <div style={{ padding: '0.75rem', background: 'rgba(139, 92, 246, 0.1)', borderRadius: 'var(--radius-md)' }}>
-              <Activity size={24} style={{ color: 'var(--accent-secondary)' }} />
-            </div>
-            <div>
-              <p className="text-muted" style={{ fontSize: '0.85rem', fontWeight: 600 }}>Avg Suspicion</p>
-              <h3 style={{ fontSize: '1.5rem' }}>14%</h3>
             </div>
           </div>
         </div>

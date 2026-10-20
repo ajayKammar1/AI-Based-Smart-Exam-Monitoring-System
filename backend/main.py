@@ -26,16 +26,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.staticfiles import StaticFiles
+import os
+
+os.makedirs("storage/known_faces", exist_ok=True)
+app.mount("/storage", StaticFiles(directory="storage"), name="storage")
+
+import threading
+
+monitor_thread = None
 
 @app.on_event("startup")
 def startup():
-
     connect_db()
+    
+    # Start AI monitoring in a background thread
+    from ai.monitoring.monitor import monitor_instance
+    global monitor_thread
+    monitor_thread = threading.Thread(target=monitor_instance.run, daemon=True)
+    monitor_thread.start()
 
 
 @app.on_event("shutdown")
 def shutdown():
-
+    from ai.monitoring.monitor import monitor_instance
+    monitor_instance.stop_event = True
     close_db()
 
 app.include_router(auth_router)

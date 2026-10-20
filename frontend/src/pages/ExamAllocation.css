@@ -1,0 +1,168 @@
+.allocation-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .allocation-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.allocation-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card-panel h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.large-select {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.large-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.exam-summary {
+  background: var(--bg-tertiary);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.exam-summary p {
+  margin: 0.3rem 0;
+  color: var(--text-secondary);
+}
+
+.exam-summary strong {
+  color: var(--text-primary);
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.help-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.panel-header h3 {
+  margin: 0;
+}
+
+.assigned-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.assigned-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-tertiary);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.assigned-card:hover {
+  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.assigned-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.assigned-info h4 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.05rem;
+}
+
+.usn {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.seat-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.btn-icon.remove {
+  color: #ef4444;
+  background: transparent;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.btn-icon.remove:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.empty-state.mini {
+  padding: 3rem 1rem;
+  border: none;
+}
+
+.empty-icon {
+  margin-bottom: 1rem;
+  opacity: 0.3;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}

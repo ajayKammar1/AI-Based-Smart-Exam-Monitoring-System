@@ -5,6 +5,11 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import StudentRegistration from './pages/StudentRegistration';
 import StudentsList from './pages/StudentsList';
+import Halls from './pages/Halls';
+import Exams from './pages/Exams';
+import ExamAllocation from './pages/ExamAllocation';
+import Camera from './pages/Camera';
+import Reports from './pages/Reports';
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }) => {
@@ -42,9 +47,39 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/camera" element={
+            <ProtectedRoute>
+              <Camera />
+            </ProtectedRoute>
+          } />
+
           <Route path="/students/register" element={
             <ProtectedRoute>
               <StudentRegistration />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/halls" element={
+            <ProtectedRoute>
+              <Halls />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/exams" element={
+            <ProtectedRoute>
+              <Exams />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/allocations" element={
+            <ProtectedRoute>
+              <ExamAllocation />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/reports" element={
+            <ProtectedRoute>
+              <Reports />
             </ProtectedRoute>
           } />
 

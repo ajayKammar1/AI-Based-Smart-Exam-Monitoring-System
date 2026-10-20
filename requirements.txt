@@ -16,7 +16,7 @@ python-multipart
 passlib[bcrypt]
 bcrypt
 aiofiles
-EmailStr
+email-validator
 
 # Reports
 reportlab

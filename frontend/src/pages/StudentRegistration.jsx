@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createStudent, uploadStudentPhoto, generateStudentEmbedding } from '../api';
+import { Camera, Upload, Video } from 'lucide-react';
 import './StudentRegistration.css';
 
 const StudentRegistration = () => {
@@ -15,9 +16,86 @@ const StudentRegistration = () => {
   
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [useAICapture, setUseAICapture] = useState(false);
+  
+  // Camera specific state
+  const [cameraStream, setCameraStream] = useState(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [cameraError, setCameraError] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(false);
+
   const [status, setStatus] = useState({ type: '', message: '' });
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Clean up camera on unmount
+  useEffect(() => {
+    return () => {
+      stopCamera();
+    };
+  }, []);
+
+  // Handle switching to camera mode
+  useEffect(() => {
+    if (useAICapture) {
+      startCamera();
+    } else {
+      stopCamera();
+    }
+  }, [useAICapture]);
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } });
+      setCameraStream(stream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      setIsCameraActive(true);
+      setCameraError(false);
+    } catch (err) {
+      console.error("Error accessing camera:", err);
+      setCameraError(true);
+      setStatus({ type: 'error', message: 'Could not access camera. Please check permissions.' });
+    }
+  };
+
+  const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
+    setIsCameraActive(false);
+  };
+
+  const captureImage = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      // Convert to blob
+      canvas.toBlob((blob) => {
+        // Create a File object
+        const file = new File([blob], "camera-capture.jpg", { type: "image/jpeg" });
+        setPhoto(file);
+        setPhotoPreview(URL.createObjectURL(blob));
+        stopCamera();
+      }, 'image/jpeg', 0.9);
+    }
+  };
+
+  const retakePhoto = () => {
+    setPhoto(null);
+    setPhotoPreview(null);
+    startCamera();
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +110,7 @@ const StudentRegistration = () => {
       const file = e.target.files[0];
       setPhoto(file);
       setPhotoPreview(URL.createObjectURL(file));
+      setUseAICapture(false); // Explicit file upload disables AI capture
     }
   };
 
@@ -39,7 +118,7 @@ const StudentRegistration = () => {
     e.preventDefault();
     
     if (!photo) {
-      setStatus({ type: 'error', message: 'Please select a photo for the student.' });
+      setStatus({ type: 'error', message: 'Please select or capture a photo for the student.' });
       return;
     }
 
@@ -53,7 +132,7 @@ const StudentRegistration = () => {
         throw new Error(createRes.message || 'Failed to create student');
       }
 
-      // 2. Upload Photo
+      // 2. Upload Photo (File or Blob)
       setStatus({ type: 'info', message: 'Uploading student photo...' });
       const photoRes = await uploadStudentPhoto(formData.student_id, photo);
       
@@ -61,7 +140,7 @@ const StudentRegistration = () => {
         throw new Error(photoRes.message || 'Failed to upload photo');
       }
 
-      // 3. Generate Embedding
+      // 3. Generate Embedding via backend
       setStatus({ type: 'info', message: 'Generating facial embeddings for AI...' });
       const embedRes = await generateStudentEmbedding(formData.student_id);
       
@@ -83,6 +162,7 @@ const StudentRegistration = () => {
       });
       setPhoto(null);
       setPhotoPreview(null);
+      setUseAICapture(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -193,35 +273,99 @@ const StudentRegistration = () => {
           
           <div className="photo-upload-section full-width">
             <label>Student Photo (for AI Facial Recognition)</label>
-            <div className="photo-upload-container">
-              {photoPreview ? (
-                <div className="photo-preview-wrapper">
-                  <img src={photoPreview} alt="Preview" className="photo-preview" />
-                  <button 
-                    type="button" 
-                    className="change-photo-btn"
+            
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', marginBottom: '1rem', justifyContent: 'center' }}>
+              <button 
+                type="button" 
+                className={`capture-mode-btn ${!useAICapture ? 'active' : ''}`}
+                onClick={() => setUseAICapture(false)}
+              >
+                <Upload size={18} /> Upload File
+              </button>
+              <button 
+                type="button" 
+                className={`capture-mode-btn ${useAICapture ? 'active' : ''}`}
+                onClick={() => { setUseAICapture(true); setPhoto(null); setPhotoPreview(null); }}
+              >
+                <Camera size={18} /> In-Browser Web Camera
+              </button>
+            </div>
+
+            {useAICapture ? (
+              <div className="camera-capture-container">
+                {photoPreview ? (
+                  <div className="photo-preview-wrapper">
+                    <img src={photoPreview} alt="Captured preview" className="photo-preview" />
+                    <button 
+                      type="button" 
+                      className="change-photo-btn"
+                      onClick={retakePhoto}
+                    >
+                      Retake Photo
+                    </button>
+                  </div>
+                ) : (
+                  <div className="video-wrapper">
+                    {cameraError ? (
+                      <div className="camera-error-box">
+                        <Video size={48} style={{ opacity: 0.5, marginBottom: '1rem' }} />
+                        <p>Camera access denied or unavailable.</p>
+                        <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>Please check your browser permissions.</p>
+                      </div>
+                    ) : (
+                      <>
+                        <video 
+                          ref={videoRef} 
+                          autoPlay 
+                          playsInline 
+                          muted 
+                          className="live-video"
+                        ></video>
+                        <button 
+                          type="button" 
+                          className="capture-btn"
+                          onClick={captureImage}
+                          disabled={!isCameraActive}
+                        >
+                          <Camera size={20} /> Capture Face
+                        </button>
+                      </>
+                    )}
+                    <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="photo-upload-container">
+                {photoPreview ? (
+                  <div className="photo-preview-wrapper">
+                    <img src={photoPreview} alt="Preview" className="photo-preview" />
+                    <button 
+                      type="button" 
+                      className="change-photo-btn"
+                      onClick={() => fileInputRef.current.click()}
+                    >
+                      Change Photo
+                    </button>
+                  </div>
+                ) : (
+                  <div 
+                    className="photo-upload-placeholder"
                     onClick={() => fileInputRef.current.click()}
                   >
-                    Change Photo
-                  </button>
-                </div>
-              ) : (
-                <div 
-                  className="photo-upload-placeholder"
-                  onClick={() => fileInputRef.current.click()}
-                >
-                  <div className="upload-icon">📷</div>
-                  <span>Click to browse for a photo</span>
-                </div>
-              )}
-              <input 
-                type="file" 
-                accept="image/*" 
-                onChange={handlePhotoChange} 
-                ref={fileInputRef}
-                style={{ display: 'none' }}
-              />
-            </div>
+                    <div className="upload-icon">📷</div>
+                    <span>Click to browse for a photo</span>
+                  </div>
+                )}
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handlePhotoChange} 
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="form-actions">

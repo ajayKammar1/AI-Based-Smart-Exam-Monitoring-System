@@ -7,3 +7,16 @@ env/
 venv/
 .env
 .venv/
+
+# Archives & Temporary files
+*.zip
+
+# Uploaded test captures and storage
+storage/unknown_faces/*
+!storage/unknown_faces/.gitkeep
+storage/known_faces/*
+!storage/known_faces/.gitkeep
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
